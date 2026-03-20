@@ -5,23 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>◈ Таємний Клуб Фанатів Уніклo</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0a0a0a;
-      --surface:  #111111;
-      --card:     #181818;
-      --border:   #252525;
-      --text:     #f0ece4;
-      --muted:    #5a5a5a;
-      --subtle:   #2e2e2e;
-      --gold:     #c8a96e;
-      --gold-lt:  #e2cfa0;
-      --green:    #4ade80;
-      --red:      #ef4444;
-      --r:        12px;
+      --bg:      #f7f6f2;
+      --surface: #ffffff;
+      --card:    #ffffff;
+      --border:  #e8e6e0;
+      --text:    #111111;
+      --muted:   #999999;
+      --subtle:  #cccccc;
+      --gold:    #b8913a;
+      --gold-lt: #d4a853;
+      --gold-bg: #fdf6e9;
+      --green:   #16a34a;
+      --red:     #dc2626;
+      --r:       12px;
     }
 
     html { scroll-behavior: smooth; }
@@ -33,66 +34,93 @@
     /* HEADER */
     header {
       position: sticky; top: 0; z-index: 300;
-      background: rgba(10,10,10,.95);
-      backdrop-filter: blur(24px) saturate(180%);
+      background: rgba(247,246,242,.96);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .h-inner {
       max-width: 1280px; margin: 0 auto;
       display: flex; align-items: center; gap: 16px;
-      padding: 0 24px; height: 58px;
+      padding: 0 24px; height: 60px;
     }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
     .logo-mark {
-      width: 34px; height: 34px; background: var(--gold); border-radius: 9px;
-      display: grid; place-items: center; font-size: 15px; font-weight: 900; color: #000; flex-shrink: 0;
+      width: 34px; height: 34px; background: var(--text); border-radius: 9px;
+      display: grid; place-items: center; font-size: 14px; font-weight: 900; color: #fff; flex-shrink: 0;
     }
-    .logo-text { font-size: 14px; font-weight: 800; letter-spacing: -.4px; white-space: nowrap; }
+    .logo-text { font-size: 14px; font-weight: 800; letter-spacing: -.4px; }
     .logo-sub  { font-size: 9px; color: var(--muted); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 1px; }
-    .h-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+    .h-divider { width: 1px; height: 26px; background: var(--border); flex-shrink: 0; }
     .h-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
     .h-count strong { color: var(--gold); font-weight: 700; }
+    .h-badge {
+      background: var(--gold-bg); border: 1px solid rgba(184,145,58,.3);
+      color: var(--gold); font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+    }
     .h-spacer { flex: 1; }
     .btn-cta {
-      background: var(--gold); color: #000; border: none; cursor: pointer;
+      background: var(--text); color: #fff; border: none; cursor: pointer;
       font-family: inherit; font-size: 13px; font-weight: 800;
-      padding: 9px 20px; border-radius: 9px; letter-spacing: .2px;
+      padding: 9px 20px; border-radius: 9px;
       transition: background .15s, transform .15s; white-space: nowrap;
     }
-    .btn-cta:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-cta:hover { background: #333; transform: translateY(-1px); }
+
+    /* FIGHT CLUB QUOTE */
+    .fc-quote {
+      background: var(--text); color: #fff;
+      padding: 20px 24px; text-align: center;
+    }
+    .fc-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .fc-rule {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: clamp(14px, 2.5vw, 18px);
+      letter-spacing: .3px; line-height: 1.4;
+    }
+    .fc-rule strong { font-style: normal; color: var(--gold-lt); }
+    .fc-sep { color: #555; font-size: 18px; }
 
     /* HERO */
     .hero {
       max-width: 1280px; margin: 0 auto;
       padding: 56px 24px 40px;
-      display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end;
+      display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(200,169,110,.08); border: 1px solid rgba(200,169,110,.25);
+      background: var(--gold-bg); border: 1px solid rgba(184,145,58,.3);
       color: var(--gold); font-size: 10px; font-weight: 700;
       letter-spacing: 2.5px; text-transform: uppercase;
       padding: 5px 12px; border-radius: 20px; margin-bottom: 16px;
     }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2s infinite; }
+    .hero-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--gold); animation: blink 2s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-    h1 { font-size: clamp(30px, 5vw, 54px); font-weight: 900; letter-spacing: -2px; line-height: 1.04; margin-bottom: 14px; }
+    h1 { font-size: clamp(30px, 5vw, 56px); font-weight: 900; letter-spacing: -2.5px; line-height: 1.02; margin-bottom: 14px; }
     h1 em { color: var(--gold); font-style: normal; }
-    .hero-desc { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 440px; }
-    .hero-right { text-align: right; }
-    .hero-stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-    .hero-stat-num { font-size: 40px; font-weight: 900; color: var(--gold); letter-spacing: -1.5px; }
+    .hero-desc { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 420px; }
+
+    /* DISCOUNT CARD */
+    .disc-card {
+      background: var(--gold); color: #fff;
+      border-radius: 18px; padding: 28px 32px; text-align: center;
+      min-width: 200px; flex-shrink: 0;
+      box-shadow: 0 8px 32px rgba(184,145,58,.25);
+    }
+    .disc-pct { font-size: 64px; font-weight: 900; letter-spacing: -3px; line-height: 1; }
+    .disc-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: .85; margin-top: 4px; }
+    .disc-sub { font-size: 11px; opacity: .7; margin-top: 6px; }
 
     /* SEARCH */
     .search-area {
       max-width: 1280px; margin: 0 auto;
-      padding: 0 24px 32px;
+      padding: 0 24px 28px;
       display: flex; gap: 12px; align-items: center;
     }
     .search-wrap { position: relative; flex: 1; max-width: 480px; }
     .search-wrap input {
       width: 100%;
-      background: var(--surface); border: 1px solid var(--border);
+      background: var(--surface); border: 1.5px solid var(--border);
       color: var(--text); font-family: inherit; font-size: 14px;
       padding: 11px 16px 11px 42px; border-radius: 10px;
       outline: none; transition: border-color .15s;
@@ -101,31 +129,29 @@
     .search-wrap input::placeholder { color: var(--muted); }
     .s-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 15px; pointer-events: none; }
     .sort-sel {
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--muted); font-family: inherit; font-size: 13px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      color: var(--text); font-family: inherit; font-size: 13px;
       padding: 11px 14px; border-radius: 10px; outline: none; cursor: pointer;
-      transition: border-color .15s;
     }
     .sort-sel:focus { border-color: var(--gold); }
 
-    /* INVENTORY BAR */
+    /* INVENTORY */
     .inv-wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px 28px; }
     .inv-card {
-      background: linear-gradient(135deg, rgba(200,169,110,.05), transparent);
-      border: 1px solid rgba(200,169,110,.18);
+      background: #f0fdf4; border: 1.5px solid #bbf7d0;
       border-radius: var(--r); padding: 14px 20px;
       display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
     }
     .inv-left { flex: 1; min-width: 180px; }
-    .inv-eyebrow { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; }
+    .inv-eyebrow { font-size: 10px; color: var(--green); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; font-weight: 700; }
     .inv-name { font-size: 13px; font-weight: 600; }
     .inv-sizes { display: flex; gap: 8px; flex-wrap: wrap; }
     .inv-chip {
       display: flex; align-items: center; gap: 6px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 8px; padding: 6px 12px; font-size: 13px;
+      background: #fff; border: 1px solid #bbf7d0;
+      border-radius: 8px; padding: 5px 11px; font-size: 13px;
     }
-    .inv-chip .sz { font-weight: 700; color: var(--gold); }
+    .inv-chip .sz { font-weight: 700; color: var(--green); }
     .inv-chip .qt { color: var(--muted); }
     .inv-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
@@ -134,27 +160,27 @@
     .filters { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .fl { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-right: 6px; flex-shrink: 0; }
     .f-btn {
-      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      background: transparent; border: 1.5px solid var(--border); color: var(--muted);
       font-family: inherit; font-size: 12px; font-weight: 500;
       padding: 5px 13px; border-radius: 20px; cursor: pointer;
-      transition: all .15s; letter-spacing: .2px; white-space: nowrap;
+      transition: all .15s; white-space: nowrap;
     }
-    .f-btn:hover { border-color: rgba(200,169,110,.5); color: var(--gold-lt); }
-    .f-btn.on { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 700; }
+    .f-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .f-btn.on { background: var(--text); border-color: var(--text); color: #fff; font-weight: 700; }
 
     /* GRID */
     .grid-area { max-width: 1280px; margin: 0 auto; padding: 0 24px 64px; }
     .grid-meta { font-size: 11px; color: var(--muted); margin-bottom: 16px; letter-spacing: .5px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
 
     /* CARD */
     .card {
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--card); border: 1.5px solid var(--border);
       border-radius: var(--r); overflow: hidden; cursor: pointer;
       transition: transform .2s, border-color .2s, box-shadow .2s; position: relative;
     }
-    .card:hover { transform: translateY(-4px); border-color: rgba(200,169,110,.45); box-shadow: 0 12px 40px rgba(0,0,0,.55); }
-    .card-img-box { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #111; }
+    .card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
+    .card-img-box { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #f0eeea; }
     .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; display: block; }
     .card:hover .card-img { transform: scale(1.05); }
     .sale-tag {
@@ -162,138 +188,167 @@
       background: var(--red); color: #fff;
       font-size: 9px; font-weight: 800; padding: 3px 7px; border-radius: 5px; letter-spacing: .5px;
     }
-    .card-body { padding: 11px 13px 13px; }
-    .card-name {
-      font-size: 12px; font-weight: 500; line-height: 1.45; margin-bottom: 7px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    .club-tag {
+      position: absolute; top: 9px; right: 9px;
+      background: var(--gold); color: #fff;
+      font-size: 9px; font-weight: 800; padding: 3px 7px; border-radius: 5px; letter-spacing: .3px;
     }
-    .card-row { display: flex; align-items: baseline; gap: 7px; }
-    .card-price { font-size: 15px; font-weight: 800; color: var(--gold); }
-    .card-old { font-size: 11px; color: var(--muted); text-decoration: line-through; }
-    .card-cat { font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .5px; text-transform: uppercase; }
+    .card-body { padding: 12px 14px 14px; }
+    .card-name {
+      font-size: 12px; font-weight: 500; line-height: 1.45; margin-bottom: 8px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      color: var(--text);
+    }
+    .card-prices { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
+    .card-price { font-size: 15px; font-weight: 800; color: var(--text); }
+    .card-club  { font-size: 13px; font-weight: 700; color: var(--gold); }
+    .card-old   { font-size: 11px; color: var(--muted); text-decoration: line-through; }
+    .card-cat   { font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .5px; text-transform: uppercase; }
 
     /* LOADER / EMPTY */
     .loader { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 80px; color: var(--muted); grid-column: 1/-1; }
     .spin { width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: rotate .6s linear infinite; }
     @keyframes rotate { to { transform: rotate(360deg); } }
     .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 24px; color: var(--muted); }
-    .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .25; }
 
     /* OVERLAY */
     .overlay {
       position: fixed; inset: 0; z-index: 400;
-      background: rgba(0,0,0,.88); backdrop-filter: blur(10px);
+      background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
       display: flex; align-items: center; justify-content: center; padding: 20px;
       opacity: 0; pointer-events: none; transition: opacity .2s;
     }
     .overlay.open { opacity: 1; pointer-events: all; }
     .modal {
-      background: var(--surface); border: 1px solid var(--border);
+      background: var(--surface); border: 1.5px solid var(--border);
       border-radius: 18px; width: 100%; max-width: 580px;
       max-height: 92vh; overflow-y: auto; position: relative;
       transform: translateY(16px); transition: transform .2s; padding: 32px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.15);
     }
     .overlay.open .modal { transform: translateY(0); }
     .modal-x {
       position: absolute; top: 14px; right: 14px;
-      background: var(--card); border: 1px solid var(--border); color: var(--muted);
+      background: var(--bg); border: 1.5px solid var(--border); color: var(--muted);
       width: 30px; height: 30px; border-radius: 8px;
       font-size: 14px; cursor: pointer; display: grid; place-items: center;
       transition: all .15s;
     }
-    .modal-x:hover { border-color: var(--gold); color: var(--text); }
+    .modal-x:hover { border-color: var(--text); color: var(--text); }
 
     /* PRODUCT MODAL */
     .pm-grid { display: flex; gap: 24px; }
-    .pm-img { width: 170px; flex-shrink: 0; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; background: #111; }
+    .pm-img { width: 170px; flex-shrink: 0; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; background: #f0eeea; }
     .pm-info { flex: 1; min-width: 0; }
-    .pm-cat { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .pm-cat { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
     .pm-name { font-size: 18px; font-weight: 800; line-height: 1.25; letter-spacing: -.5px; margin-bottom: 12px; }
-    .pm-prices { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
-    .pm-price { font-size: 24px; font-weight: 900; color: var(--gold); }
-    .pm-old { font-size: 14px; color: var(--muted); text-decoration: line-through; }
-    .pm-link { font-size: 12px; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--subtle); padding-bottom: 1px; transition: color .15s, border-color .15s; }
-    .pm-link:hover { color: var(--gold); border-color: var(--gold); }
+    .pm-prices { margin-bottom: 8px; }
+    .pm-price { font-size: 24px; font-weight: 900; color: var(--text); }
+    .pm-old   { font-size: 13px; color: var(--muted); text-decoration: line-through; margin-top: 2px; }
+    .pm-club-price {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--gold-bg); border: 1px solid rgba(184,145,58,.25);
+      border-radius: 8px; padding: 8px 12px; margin: 10px 0;
+    }
+    .pm-club-num { font-size: 20px; font-weight: 900; color: var(--gold); }
+    .pm-club-tag { font-size: 10px; color: var(--gold); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .pm-link { font-size: 12px; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px; transition: color .15s; }
+    .pm-link:hover { color: var(--gold); }
     .btn-order-item {
       width: 100%; margin-top: 14px;
-      background: var(--gold); color: #000; border: none; cursor: pointer;
+      background: var(--text); color: #fff; border: none; cursor: pointer;
       font-family: inherit; font-size: 14px; font-weight: 800;
-      padding: 13px; border-radius: 10px; letter-spacing: .2px;
+      padding: 13px; border-radius: 10px;
       transition: background .15s, transform .15s;
     }
-    .btn-order-item:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-order-item:hover { background: #333; transform: translateY(-1px); }
 
     /* ORDER MODAL */
     .m-title { font-size: 22px; font-weight: 900; letter-spacing: -.6px; margin-bottom: 4px; }
-    .m-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+    .m-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+    .m-disc-notice {
+      background: var(--gold-bg); border: 1px solid rgba(184,145,58,.3);
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 18px;
+      font-size: 13px; color: var(--gold); font-weight: 600;
+    }
     .frow { margin-bottom: 14px; }
-    .frow label { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-    .frow input, .frow select, .frow textarea {
-      width: 100%; background: var(--card); border: 1px solid var(--border);
+    .frow label { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+    .frow input, .frow textarea {
+      width: 100%; background: var(--bg); border: 1.5px solid var(--border);
       color: var(--text); font-family: inherit; font-size: 14px;
       padding: 11px 14px; border-radius: 10px; outline: none;
-      transition: border-color .15s; appearance: none;
+      transition: border-color .15s;
     }
-    .frow input:focus, .frow select:focus, .frow textarea:focus { border-color: var(--gold); }
+    .frow input:focus, .frow textarea:focus { border-color: var(--gold); background: #fff; }
     .frow input::placeholder, .frow textarea::placeholder { color: var(--subtle); }
     .frow textarea { resize: vertical; min-height: 76px; }
     .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .ctabs { display: flex; gap: 8px; }
     .ctab {
       flex: 1; padding: 10px 8px; border-radius: 10px;
-      border: 1px solid var(--border); background: transparent;
+      border: 1.5px solid var(--border); background: transparent;
       color: var(--muted); font-family: inherit; font-size: 13px; font-weight: 600;
       cursor: pointer; transition: all .15s;
       display: flex; align-items: center; justify-content: center; gap: 5px;
     }
-    .ctab.on { background: var(--card); border-color: var(--gold); color: var(--gold-lt); }
+    .ctab.on { background: var(--bg); border-color: var(--text); color: var(--text); }
     .btn-send {
       width: 100%; margin-top: 6px;
-      background: var(--gold); color: #000; border: none; cursor: pointer;
+      background: var(--text); color: #fff; border: none; cursor: pointer;
       font-family: inherit; font-size: 15px; font-weight: 900;
-      padding: 14px; border-radius: 10px; letter-spacing: .3px;
+      padding: 14px; border-radius: 10px;
       transition: background .15s, transform .15s;
     }
-    .btn-send:hover { background: var(--gold-lt); transform: translateY(-1px); }
-    .btn-send:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .btn-send:hover { background: #333; transform: translateY(-1px); }
+    .btn-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
     .m-divider { height: 1px; background: var(--border); margin: 16px 0; }
     .m-or { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
     .quick-row { display: flex; gap: 8px; }
     .btn-quick {
       flex: 1; padding: 10px 8px; border-radius: 10px;
-      border: 1px solid var(--border); background: transparent;
+      border: 1.5px solid var(--border); background: transparent;
       color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 600;
       cursor: pointer; transition: all .15s;
       display: flex; align-items: center; justify-content: center; gap: 5px;
     }
-    .btn-quick:hover { border-color: rgba(200,169,110,.4); color: var(--gold-lt); }
+    .btn-quick:hover { border-color: var(--text); color: var(--text); }
 
     /* TOAST */
     .toast {
       position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--card); border: 1px solid var(--border);
-      color: var(--text); padding: 12px 22px; border-radius: 10px;
+      background: var(--text); color: #fff;
+      padding: 12px 22px; border-radius: 10px;
       font-size: 14px; font-weight: 500; z-index: 999;
       transition: transform .3s cubic-bezier(.22,1,.36,1);
       white-space: nowrap; pointer-events: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.ok   { border-color: var(--green); }
-    .toast.err  { border-color: var(--red); }
+    .toast.ok  { background: var(--green); }
+    .toast.err { background: var(--red); }
 
     /* FOOTER */
-    footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; font-size: 12px; color: var(--muted); letter-spacing: .5px; }
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 24px;
+      text-align: center; font-size: 12px; color: var(--muted); letter-spacing: .5px;
+    }
+    .footer-rule {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 13px; color: var(--subtle); margin-top: 8px;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 680px) {
       .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
+      .disc-card { min-width: auto; width: 100%; padding: 20px; }
+      .disc-pct { font-size: 48px; }
       h1 { font-size: 28px; }
       .pm-grid { flex-direction: column; }
       .pm-img { width: 100%; aspect-ratio: 4/3; }
       .f2 { grid-template-columns: 1fr; }
-      .h-divider, .h-count { display: none; }
+      .h-divider, .h-count, .h-badge { display: none; }
+      .fc-sep { display: none; }
     }
   </style>
 </head>
@@ -311,21 +366,32 @@
     </a>
     <div class="h-divider"></div>
     <div class="h-count"><strong id="hNum">–</strong> товарів</div>
+    <div class="h-badge">−10% для членів клубу</div>
     <div class="h-spacer"></div>
     <button class="btn-cta" onclick="openOrder()">✦ Замовити</button>
   </div>
 </header>
+
+<!-- FIGHT CLUB QUOTE -->
+<div class="fc-quote">
+  <div class="fc-inner">
+    <span class="fc-rule">Перше правило Таємного Клубу — <strong>не говори про Таємний Клуб.</strong></span>
+    <span class="fc-sep">·</span>
+    <span class="fc-rule">Друге правило — <strong>НЕ ГОВОРИ про Таємний Клуб.</strong></span>
+  </div>
+</div>
 
 <!-- HERO -->
 <div class="hero">
   <div>
     <div class="hero-badge">Ексклюзивний доступ</div>
     <h1>Таємний Клуб<br><em>Фанатів Уніклo</em></h1>
-    <p class="hero-desc">Відбірні речі від Uniqlo та перевірених брендів. Оригінал, вигідна ціна, доставка Новою Поштою.</p>
+    <p class="hero-desc">Відбірні речі від Uniqlo та перевірених брендів. Оригінал, вигідна ціна, доставка Новою Поштою. Члени клубу отримують знижку −10% на все.</p>
   </div>
-  <div class="hero-right">
-    <div class="hero-stat-label">товарів у каталозі</div>
-    <div class="hero-stat-num" id="heroNum">–</div>
+  <div class="disc-card">
+    <div class="disc-pct">−10%</div>
+    <div class="disc-label">Знижка клубу</div>
+    <div class="disc-sub">на кожне замовлення</div>
   </div>
 </div>
 
@@ -348,7 +414,7 @@
 <div class="inv-wrap" id="invWrap" style="display:none">
   <div class="inv-card">
     <div class="inv-left">
-      <div class="inv-eyebrow">В наявності</div>
+      <div class="inv-eyebrow">В наявності зараз</div>
       <div class="inv-name">🟢 Uniqlo Down Jacket · Зелена · E479209-000</div>
     </div>
     <div class="inv-sizes" id="invSizes"></div>
@@ -371,7 +437,11 @@
   </div>
 </div>
 
-<footer>◈ Таємний Клуб Фанатів Уніклo &nbsp;·&nbsp; Доставка Новою Поштою &nbsp;·&nbsp; Тільки оригінальні товари</footer>
+<!-- FOOTER -->
+<footer>
+  <div>◈ Таємний Клуб Фанатів Уніклo &nbsp;·&nbsp; Доставка Новою Поштою &nbsp;·&nbsp; Тільки оригінальні товари</div>
+  <div class="footer-rule">"Перше правило Таємного Клубу — не говори про Таємний Клуб."</div>
+</footer>
 
 <!-- PRODUCT MODAL -->
 <div class="overlay" id="prodOv" onclick="closeProdOv(event)">
@@ -386,6 +456,12 @@
           <div class="pm-price" id="pmPrice"></div>
           <div class="pm-old"   id="pmOld"></div>
         </div>
+        <div class="pm-club-price" id="pmClubWrap">
+          <div>
+            <div class="pm-club-tag">Ціна клубу −10%</div>
+            <div class="pm-club-num" id="pmClub"></div>
+          </div>
+        </div>
         <a id="pmLink" class="pm-link" href="#" target="_blank">Переглянути на Shafa →</a>
         <button class="btn-order-item" onclick="orderCurrent()">✦ Замовити цей товар</button>
       </div>
@@ -399,6 +475,7 @@
     <button class="modal-x" onclick="closeOrderOv(null,1)">✕</button>
     <div class="m-title">Оформити замовлення</div>
     <div class="m-sub" id="mSub">Введіть дані та оберіть зручний спосіб зв'язку</div>
+    <div class="m-disc-notice">🎟 Ви в клубі — знижка −10% застосовується автоматично</div>
 
     <div class="frow">
       <label>Ваше ім'я</label>
@@ -463,15 +540,16 @@
 
 const SUPABASE_URL = 'https://rwhhtgawdcmciwfrewtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3aGh0Z2F3ZGNtY2l3ZnJld3RrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxOTEzNjMsImV4cCI6MjA1OTc2NzM2M30.Bz_LEkyUuks8nIjEfzErriPbbOYyq0PkjMRtHFlJ4fE';
-const STORAGE      = `${SUPABASE_URL}/storage/v1/object/public/catalog-photos/`;
 
 // Telegram bot (отримай через @BotFather → /newbot)
-const TG_TOKEN   = 'YOUR_BOT_TOKEN';    // напр. 7123456789:AAHxxx...
-const TG_CHAT_ID = 'YOUR_CHAT_ID';     // свій ID: пиши @userinfobot
+const TG_TOKEN   = 'YOUR_BOT_TOKEN';
+const TG_CHAT_ID = 'YOUR_CHAT_ID';     // пиши @userinfobot щоб дізнатись свій ID
 
 // Контакти для кнопок «Написати напряму»
-const TG_ME      = 'YOUR_TG_USERNAME'; // твій @username (без @)
-const VIBER_NUM  = 'YOUR_PHONE';       // формат: 380XXXXXXXXX
+const TG_ME     = 'YOUR_TG_USERNAME'; // твій @username (без @)
+const VIBER_NUM = 'YOUR_PHONE';       // формат: 380XXXXXXXXX
+
+const CLUB_DISCOUNT = 0.10; // 10%
 
 // ════════════════════════════════════════════════════════
 
@@ -490,6 +568,11 @@ const CAT = {
   'sport':             'Спорт',
 };
 
+function clubPrice(price) {
+  if (!price) return null;
+  return Math.round(price * (1 - CLUB_DISCOUNT));
+}
+
 async function init() {
   const [{ data: cat }, { data: inv }] = await Promise.all([
     sb.from('shafa_catalog').select('*').order('category').limit(200),
@@ -497,8 +580,7 @@ async function init() {
   ]);
   all   = cat || [];
   shown = [...all];
-  document.getElementById('hNum').textContent    = all.length;
-  document.getElementById('heroNum').textContent = all.length;
+  document.getElementById('hNum').textContent = all.length;
   buildFilters();
   renderGrid();
   buildInv(inv || []);
@@ -561,9 +643,9 @@ function applyAll() {
 
 // RENDER
 function imgSrc(p) {
-  if (p.photo_storage_path) return STORAGE + p.photo_storage_path;
+  if (p.photo_storage_path) return p.photo_storage_path;
   if (p.photo_url) return p.photo_url;
-  return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'><rect width='3' height='4' fill='%23181818'/></svg>`;
+  return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'><rect width='3' height='4' fill='%23f0eeea'/></svg>`;
 }
 function uah(n) { return n ? n.toLocaleString('uk-UA') + ' ₴' : '—'; }
 function cl(c)  { return CAT[c] || c || ''; }
@@ -573,24 +655,28 @@ function renderGrid() {
   document.getElementById('gridMeta').textContent = `${shown.length} товарів`;
 
   if (!shown.length) {
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div>Нічого не знайдено</div>`;
+    grid.innerHTML = `<div class="empty-state">🔍<br><br>Нічого не знайдено</div>`;
     return;
   }
-  grid.innerHTML = shown.map(p => `
+  grid.innerHTML = shown.map(p => {
+    const cp = clubPrice(p.price_uah);
+    return `
     <div class="card" onclick="openProd('${p.id}')">
       <div class="card-img-box">
-        <img class="card-img" src="${imgSrc(p)}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.2'">
+        <img class="card-img" src="${imgSrc(p)}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">
         ${p.on_sale ? '<div class="sale-tag">SALE</div>' : ''}
+        <div class="club-tag">−10%</div>
       </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
-        <div class="card-row">
-          <div class="card-price">${uah(p.price_uah)}</div>
-          ${p.old_price_uah ? `<div class="card-old">${uah(p.old_price_uah)}</div>` : ''}
+        <div class="card-prices">
+          <div class="card-old">${uah(p.price_uah)}</div>
+          <div class="card-club">${uah(cp)}</div>
         </div>
         <div class="card-cat">${cl(p.category)}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // PRODUCT MODAL
@@ -601,7 +687,14 @@ function openProd(id) {
   document.getElementById('pmCat').textContent      = cl(curProd.category);
   document.getElementById('pmName').textContent     = curProd.name;
   document.getElementById('pmPrice').textContent    = uah(curProd.price_uah);
-  document.getElementById('pmOld').textContent      = curProd.old_price_uah ? uah(curProd.old_price_uah) : '';
+  document.getElementById('pmOld').textContent      = curProd.old_price_uah ? `Стара ціна: ${uah(curProd.old_price_uah)}` : '';
+  const cp = clubPrice(curProd.price_uah);
+  if (cp) {
+    document.getElementById('pmClub').textContent = uah(cp);
+    document.getElementById('pmClubWrap').style.display = '';
+  } else {
+    document.getElementById('pmClubWrap').style.display = 'none';
+  }
   const lk = document.getElementById('pmLink');
   curProd.shafa_url ? (lk.href = curProd.shafa_url, lk.style.display = '') : (lk.style.display = 'none');
   document.getElementById('prodOv').classList.add('open');
@@ -617,9 +710,10 @@ function orderCurrent() { closeProdOv(null,1); openOrder(curProd); }
 
 // ORDER MODAL
 function openOrder(prod) {
+  const cp = prod ? clubPrice(prod.price_uah) : null;
   document.getElementById('fProduct').value = prod ? prod.name : '';
   document.getElementById('mSub').textContent = prod
-    ? `Товар: ${prod.name} · ${uah(prod.price_uah)}`
+    ? `${prod.name} · Ціна клубу: ${uah(cp)}`
     : "Введіть дані та оберіть зручний спосіб зв'язку";
   document.getElementById('orderOv').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -647,7 +741,8 @@ async function submitOrder() {
   btn.disabled = true; btn.textContent = 'Відправляємо…';
 
   const lines = [
-    '🛍 *Нове замовлення — Таємний Клуб*', '',
+    '🛍 *Нове замовлення — Таємний Клуб*',
+    '🎟 *Знижка клубу −10% застосовано*', '',
     `👤 *Ім'я:* ${name}`,
     `📱 *Телефон:* ${phone}`,
     `💬 *Зв'язок:* ${contact === 'tg' ? 'Telegram' : 'Viber'}`, '',
@@ -668,7 +763,7 @@ async function submitOrder() {
     const d = await res.json();
     if (d.ok) {
       toast("✅ Замовлення відправлено! Скоро зв'яжемось.", 'ok');
-      closeOrderOv(null, 1);
+      closeOrderOv(null,1);
       ['fName','fPhone','fProduct','fSize','fCity','fBranch','fComment'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('fQty').value = '1';
     } else { throw new Error(d.description); }
