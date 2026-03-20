@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4modan4ik — Каталог</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark:    #1a1a2e;
+      --dark2:   #16213e;
+      --accent:  #e8a87c;
+      --accent2: #d4915c;
+      --text:    #f5f5f5;
+      --muted:   #9ca3af;
+      --card:    #252541;
+      --border:  #3a3a5e;
+      --green:   #4ade80;
+      --red:     #f87171;
+      --radius:  14px;
+    }
+
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+      border-bottom: 2px solid var(--accent);
+      padding: 0 24px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    }
+    .hinner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo { font-size: 22px; font-weight: 800; color: var(--accent); letter-spacing: -.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .live-badge { background: var(--green); color: #052e16; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; letter-spacing: .5px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+    .hstats { display: flex; gap: 24px; }
+    .hs { text-align: center; }
+    .hs-n { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .hs-l { font-size: 11px; color: var(--muted); }
+
+    /* ── HERO ── */
+    .hero { background: linear-gradient(135deg, #2a2a42, #1f1f35); padding: 36px 24px; border-bottom: 1px solid var(--border); }
+    .hero-inner { max-width: 1280px; margin: 0 auto; }
+    .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .hero p { color: var(--muted); font-size: 14px; }
+    .hero-cards { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
+    .hcard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 120px; }
+    .hcard-n { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .hcard-l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ── INVENTORY BAR ── */
+    .inv-bar { background: #1e3a2e; border-bottom: 1px solid #2d5a3e; padding: 12px 24px; display: none; }
+    .inv-bar.visible { display: block; }
+    .inv-inner { max-width: 1280px; margin: 0 auto; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .inv-title { font-size: 13px; font-weight: 700; color: var(--green); }
+    .inv-chip { background: rgba(74,222,128,.12); border: 1px solid rgba(74,222,128,.3); color: var(--green); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+
+    /* ── TOOLBAR ── */
+    .toolbar { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 14px 24px; position: sticky; top: 64px; z-index: 99; }
+    .toolbar-inner { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .search-row { display: flex; gap: 10px; align-items: center; }
+    .search-wrap { position: relative; flex: 1; max-width: 400px; }
+    .search-wrap input {
+      width: 100%; background: var(--card); border: 1.5px solid var(--border);
+      color: var(--text); padding: 10px 14px 10px 38px;
+      border-radius: 30px; font-size: 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+    .sort-sel {
+      background: var(--card); border: 1.5px solid var(--border); color: var(--text);
+      padding: 10px 14px; border-radius: 30px; font-size: 13px; outline: none; cursor: pointer;
+    }
+    .count-label { font-size: 13px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+    .cats { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cat-btn {
+      border: 1.5px solid var(--border); background: transparent; color: var(--muted);
+      padding: 6px 16px; border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600;
+      transition: all .15s; white-space: nowrap;
+    }
+    .cat-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #1a1a2e; }
+
+    /* ── GRID ── */
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 12px 40px rgba(232,168,124,.15); }
+    .card-img { height: 220px; background: #1e1e3a; position: relative; overflow: hidden; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .card:hover .card-img img { transform: scale(1.06); }
+    .card-img .no-img { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 52px; opacity: .3; }
+    .sale-badge {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--red); color: #fff; font-size: 10px; font-weight: 800;
+      padding: 3px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .card-body { padding: 14px; }
+    .cat-tag { background: rgba(232,168,124,.12); color: var(--accent); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .3px; }
+    .card-name { font-size: 14px; font-weight: 600; margin: 8px 0 10px; line-height: 1.4; color: var(--text); min-height: 38px; }
+    .price-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; }
+    .price { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .old-price { font-size: 12px; color: var(--muted); text-decoration: line-through; }
+    .shafa-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: transparent; border: 1.5px solid var(--border);
+      color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 20px;
+      text-decoration: none; transition: all .15s; margin-top: 10px;
+    }
+    .shafa-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── LOADING ── */
+    .loading { text-align: center; padding: 80px 24px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 80px 24px; color: var(--muted); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    /* ── MODAL ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 999; backdrop-filter: blur(6px); padding: 24px; overflow-y: auto; }
+    .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      width: 100%; max-width: 640px; margin: auto;
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-img { height: 320px; background: #1e1e3a; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-body { padding: 24px; }
+    .modal-cat { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+    .modal-name { font-size: 22px; font-weight: 800; margin: 8px 0; }
+    .modal-prices { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+    .modal-price { font-size: 28px; font-weight: 800; color: var(--accent); }
+    .modal-old { font-size: 16px; color: var(--muted); text-decoration: line-through; }
+    .modal-discount { background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 10px; }
+    .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #1a1a2e; border: none; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 800; cursor: pointer; text-decoration: none; transition: opacity .2s; }
+    .btn-primary:hover { opacity: .85; }
+    .btn-close { background: var(--border); color: var(--text); border: none; padding: 12px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+    footer { background: var(--dark2); border-top: 1px solid var(--border); text-align: center; padding: 24px; color: var(--muted); font-size: 13px; margin-top: 48px; }
+
+    @media (max-width: 640px) {
+      .hstats { display: none; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .card-img { height: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hinner">
+    <a class="logo" href="#">👗 4modan4ik <span class="live-badge">LIVE</span></a>
+    <div class="hstats">
+      <div class="hs"><div class="hs-n" id="hTotal">—</div><div class="hs-l">Товарів</div></div>
+      <div class="hs"><div class="hs-n" id="hSale">—</div><div class="hs-l">Зі знижкою</div></div>
+      <div class="hs"><div class="hs-n" id="hMin">—</div><div class="hs-l">Від, грн</div></div>
+      <div class="hs"><div class="hs-n" id="hRating">5.0 ⭐</div><div class="hs-l">Рейтинг</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Персональний каталог</h1>
+    <p>Оригінальні речі · Переважно Uniqlo · Київ · 419 продажів · 8 років на Шафі</p>
+    <div class="hero-cards" id="heroCards">
+      <div class="hcard"><div class="hcard-n" id="hc1">…</div><div class="hcard-l">Товарів</div></div>
+      <div class="hcard"><div class="hcard-n" id="hc2">…</div><div class="hcard-l">Категорій</div></div>
+      <div class="hcard"><div class="hcard-n" id="hc3">…</div><div class="hcard-l">Зі знижкою</div></div>
+      <div class="hcard"><div class="hcard-n" id="hc4">…</div><div class="hcard-l">Мін. ціна, грн</div></div>
+      <div class="hcard"><div class="hcard-n" id="hc5">…</div><div class="hcard-l">Середня ціна, грн</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY -->
+<div class="inv-bar" id="invBar">
+  <div class="inv-inner">
+    <span class="inv-title">📦 Склад зелених курток Uniqlo:</span>
+    <div id="invChips"></div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Пошук по назві…" oninput="applyFilters()">
+      </div>
+      <select class="sort-sel" id="sortSel" onchange="applyFilters()">
+        <option value="default">За замовчуванням</option>
+        <option value="price_asc">Ціна: від дешевих</option>
+        <option value="price_desc">Ціна: від дорогих</option>
+        <option value="sale">Спочатку зі знижкою</option>
+        <option value="name">За назвою</option>
+      </select>
+      <span class="count-label" id="countLabel">— товарів</span>
+    </div>
+    <div class="cats" id="catBtns"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <div>Завантаження з Supabase…</div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty hidden" id="empty">
+    <div class="empty-icon">🔍</div>
+    <div>Нічого не знайдено</div>
+  </div>
+</main>
+
+<footer>
+  📦 Каталог живе на Supabase · Дані оновлюються в реальному часі ·
+  <a href="https://shafa.ua/uk/member/4modan4ik" target="_blank" style="color:var(--accent)">Шафа профіль</a>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-img"><img id="mImg" src="" alt=""></div>
+    <div class="modal-body">
+      <div class="modal-cat" id="mCat"></div>
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-prices">
+        <span class="modal-price" id="mPrice"></span>
+        <span class="modal-old" id="mOld"></span>
+        <span class="modal-discount hidden" id="mDisc"></span>
+      </div>
+      <div class="modal-actions">
+        <a class="btn-primary" id="mLink" href="#" target="_blank">Відкрити на Шафі →</a>
+        <button class="btn-close" onclick="document.getElementById('overlay').classList.remove('open')">Закрити</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://rwhhtgawdcmciwfrewtk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3aGh0Z2F3ZGNtY2l3ZnJld3RrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxOTEzNjMsImV4cCI6MjA1OTc2NzM2M30.Bz_LEkyUuks8nIjEfzErriPbbOYyq0PkjMRtHFlJ4fE';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let allProducts = [];
+let activeCategory = 'Всі';
+
+// ── INIT ──────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadCatalog(), loadInventory()]);
+}
+
+// ── LOAD CATALOG ──────────────────────────────────────────
+async function loadCatalog() {
+  const { data, error } = await sb
+    .from('shafa_catalog')
+    .select('id, name, price_uah, old_price_uah, category, on_sale, shafa_url, photo_url, photo_storage_path')
+    .order('category')
+    .limit(200);
+
+  document.getElementById('loading').style.display = 'none';
+
+  if (error || !data) { document.getElementById('empty').classList.remove('hidden'); return; }
+
+  allProducts = data;
+
+  // Stats
+  const cats = [...new Set(data.map(p => p.category))];
+  const onSale = data.filter(p => p.on_sale).length;
+  const minP = Math.min(...data.map(p => p.price_uah));
+  const avgP = Math.round(data.reduce((s,p) => s + p.price_uah, 0) / data.length);
+
+  document.getElementById('hTotal').textContent  = data.length;
+  document.getElementById('hSale').textContent   = onSale;
+  document.getElementById('hMin').textContent    = minP;
+  document.getElementById('hc1').textContent     = data.length;
+  document.getElementById('hc2').textContent     = cats.length;
+  document.getElementById('hc3').textContent     = onSale;
+  document.getElementById('hc4').textContent     = minP + ' ₴';
+  document.getElementById('hc5').textContent     = avgP + ' ₴';
+
+  // Category buttons
+  const catDiv = document.getElementById('catBtns');
+  catDiv.innerHTML = ['Всі', ...cats].map(c =>
+    `<button class="cat-btn${c==='Всі'?' active':''}" onclick="setCat('${c}',this)">${c}</button>`
+  ).join('');
+
+  renderGrid(data);
+}
+
+// ── LOAD INVENTORY ────────────────────────────────────────
+async function loadInventory() {
+  const { data } = await sb
+    .from('my_inventory')
+    .select('size, quantity, price_uah, brand, name, notes, added_at')
+    .order('size');
+
+  if (!data || !data.length) return;
+
+  const bar = document.getElementById('invBar');
+  const chips = document.getElementById('invChips');
+
+  // Merge XL rows
+  const merged = {};
+  data.forEach(r => {
+    const k = r.size;
+    merged[k] = (merged[k] || 0) + r.quantity;
+  });
+
+  chips.innerHTML = Object.entries(merged)
+    .map(([sz, qty]) => `<span class="inv-chip">${sz} × ${qty} шт.</span>`)
+    .join('') + `<span class="inv-chip" style="background:rgba(74,222,128,.2)">1 525 ₴/шт.</span>`;
+
+  bar.classList.add('visible');
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function renderGrid(products) {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+
+  if (!products.length) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    document.getElementById('countLabel').textContent = '0 товарів';
+    return;
+  }
+
+  empty.classList.add('hidden');
+  document.getElementById('countLabel').textContent = `${products.length} товарів`;
+
+  grid.innerHTML = products.map(p => {
+    const imgSrc = p.photo_storage_path || p.photo_url || '';
+    const disc = p.on_sale && p.old_price_uah
+      ? Math.round((p.old_price_uah - p.price_uah) / p.old_price_uah * 100)
+      : 0;
+
+    return `<div class="card" onclick='openModal(${JSON.stringify(p)})'>
+      <div class="card-img">
+        ${imgSrc
+          ? `<img src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=no-img>👗</div>'">`
+          : `<div class="no-img">👗</div>`
+        }
+        ${disc > 0 ? `<span class="sale-badge">−${disc}%</span>` : ''}
+      </div>
+      <div class="card-body">
+        <span class="cat-tag">${p.category}</span>
+        <p class="card-name">${p.name}</p>
+        <div class="price-row">
+          <span class="price">${p.price_uah.toLocaleString('uk')} ₴</span>
+          ${p.old_price_uah ? `<span class="old-price">${p.old_price_uah.toLocaleString('uk')} ₴</span>` : ''}
+        </div>
+        <a class="shafa-btn" href="${p.shafa_url}" target="_blank" onclick="event.stopPropagation()">🔗 Шафа</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── FILTERS ───────────────────────────────────────────────
+function applyFilters() {
+  const q     = document.getElementById('search').value.toLowerCase().trim();
+  const sort  = document.getElementById('sortSel').value;
+
+  let list = allProducts.filter(p => {
+    const catOk  = activeCategory === 'Всі' || p.category === activeCategory;
+    const nameOk = !q || p.name.toLowerCase().includes(q);
+    return catOk && nameOk;
+  });
+
+  if (sort === 'price_asc')  list.sort((a,b) => a.price_uah - b.price_uah);
+  if (sort === 'price_desc') list.sort((a,b) => b.price_uah - a.price_uah);
+  if (sort === 'sale')       list.sort((a,b) => (b.on_sale ? 1 : 0) - (a.on_sale ? 1 : 0));
+  if (sort === 'name')       list.sort((a,b) => a.name.localeCompare(b.name, 'uk'));
+
+  renderGrid(list);
+}
+
+function setCat(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+// ── MODAL ─────────────────────────────────────────────────
+function openModal(p) {
+  const disc = p.on_sale && p.old_price_uah
+    ? Math.round((p.old_price_uah - p.price_uah) / p.old_price_uah * 100) : 0;
+
+  const img = p.photo_storage_path || p.photo_url || '';
+  document.getElementById('mImg').src       = img;
+  document.getElementById('mImg').alt       = p.name;
+  document.getElementById('mCat').textContent   = p.category;
+  document.getElementById('mName').textContent  = p.name;
+  document.getElementById('mPrice').textContent = p.price_uah.toLocaleString('uk') + ' ₴';
+  document.getElementById('mOld').textContent   = p.old_price_uah ? p.old_price_uah.toLocaleString('uk') + ' ₴' : '';
+  document.getElementById('mLink').href         = p.shafa_url;
+
+  const discEl = document.getElementById('mDisc');
+  if (disc > 0) { discEl.textContent = `−${disc}%`; discEl.classList.remove('hidden'); }
+  else { discEl.classList.add('hidden'); }
+
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('overlay').classList.remove('open');
+});
+
+// ── START ─────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
